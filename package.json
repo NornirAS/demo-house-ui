@@ -1,0 +1,32 @@
+{
+  "name": "demo-house-ui",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint ./src --fix --ext .js,.vue",
+    "format": "prettier --write \"**/*.{js,vue}\""
+  },
+  "dependencies": {
+    "@norniras/hive-agent": "^2.0.4",
+    "fabric": "^5.2.4",
+    "pinia": "^2.0.14",
+    "primeflex": "^3.3.0",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.23.0",
+    "vue": "^3.2.37",
+    "vue-router": "^4.0.14",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.12.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^9.9.0",
+    "prettier": "^2.7.1",
+    "vite": "^4.2.1"
+  }
+}
