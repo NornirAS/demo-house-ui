@@ -1,8 +1,9 @@
 <script setup>
-import { GoogleMap, Marker } from 'vue3-google-map'
-import { GOOGLE_MAPS_API } from '@/config'
-
-defineProps({
+// import { GoogleMap, Marker } from 'vue3-google-map'
+// import { GOOGLE_MAPS_API } from '@/config'
+import leaflet from 'leaflet'
+import { onMounted } from 'vue'
+const props = defineProps({
   selectedBuilding: {
     type: Object || null,
     default: new Object(),
@@ -12,30 +13,32 @@ defineProps({
     default: new Array(),
   },
 })
+let mymap = null
+const center = [59.9133937, 10.7476917]
 
-const emit = defineEmits(['update:selectedBuilding'])
+const addMarkers = (map, markers) => {
+  markers.forEach(marker => {
+   let m = leaflet.marker([marker.position.lat, marker.position.lng]).addTo(map)
+   m.bindPopup('<b>'+marker.title+'</b><br><div><img style="width:20px; height:20px" src="./'+marker.image+'"/></div>');
+  })
+}
 
-const center = {
-  lat: 59.9133937,
-  lng: 10.7476917,
-}
-const select = building => {
-  emit('update:selectedBuilding', building)
-}
+onMounted(() => {
+  mymap = leaflet.map('mapid').setView(center, 13)
+  leaflet
+    .tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    })
+    .addTo(mymap)
+
+  addMarkers(mymap, props.buildings)
+})
+
+console.log(props.buildings)
 </script>
 
 <template>
-  <GoogleMap
-    :api-key="GOOGLE_MAPS_API"
-    style="width: 100%; height: 500px"
-    :center="center"
-    :zoom="12"
-  >
-    <Marker
-      v-for="building in buildings"
-      :key="building.title"
-      :options="{ position: building.position }"
-      @click="select(building)"
-    />
-  </GoogleMap>
+  <div id="mapid" class="map" style="width: 100%; height: 500px">Map Loading...</div>
 </template>

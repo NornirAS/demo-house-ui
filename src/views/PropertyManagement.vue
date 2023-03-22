@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import { AppSectionHeading } from '@nornir/ui'
 import GoogleMap from '@/components/GoogleMap.vue'
 import BuildingPlan from '@/components/BuildingPlan.vue'
 import BuildingList from '@/components/BuildingList.vue'

@@ -12,6 +12,7 @@
   "dependencies": {
     "@norniras/hive-agent": "^2.0.4",
     "fabric": "^5.2.4",
+    "leaflet": "^1.9.3",
     "pinia": "^2.0.14",
     "primeflex": "^3.3.0",
     "primeicons": "^6.0.1",
