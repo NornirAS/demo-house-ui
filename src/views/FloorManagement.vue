@@ -1,16 +1,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Card from 'primevue/card'
 import FloorPlan from '@/components/FloorPlan.vue'
 import ObjectDataDisplay from '@/components/ObjectDataDisplay.vue'
 import { isEmpty } from '@/utils'
-import { HiveClientWS } from '@nornir/hive-client'
+import hiveWS from '../hiveWs'
 
 const route = useRoute()
-
-const ws = new WebSocket('wss://sensors-webserver.herokuapp.com')
-
-const hiveWS = new HiveClientWS()
 
 const activeItem = ref({})
 const incomingData = ref({})
@@ -80,17 +79,10 @@ const activeItemData = computed(() => {
 
 const message = ref('')
 
-const sendMessage = () => {
-  ws.send(`MESSAGE:${message.value}`)
-}
-
-ws.onopen = () => {
-  console.log('WS is opened')
-}
-
-ws.onmessage = async ({ data }) => {
-  const msg = await data.text()
-  const msgObj = JSON.parse(msg)
+hiveWS.open(data => {
+  const { RTW } = JSON.parse(data)
+  if (!RTW && !RTW.PAYLOAD) return
+  const msgObj = JSON.parse(RTW.PAYLOAD)
   // Update incoming data with structure from the list
   incomingData.value = Object.assign(
     msgObj,
@@ -101,55 +93,12 @@ ws.onmessage = async ({ data }) => {
     msgObj,
     initialDeviceList.value[msgObj.id - 1],
   )
-}
-
-ws.onclose = () => {
-  console.log('WS is closed')
-}
-
-hiveWS.init(
-  {
-    type: 'channel',
-    service: '',
-    rootDomain: 'cioty.com',
-    token: '',
-  },
-  async data => {
-    const { RTW } = JSON.parse(data)
-    if (!RTW && !RTW.PAYLOAD) return
-    const msgObj = JSON.parse(RTW.PAYLOAD)
-    // Update incoming data with structure from the list
-    incomingData.value = Object.assign(
-      msgObj,
-      initialDeviceList.value[msgObj.id - 1],
-    )
-    // Update device data list with incomming data
-    deviceDataList.value[msgObj.id - 1] = Object.assign(
-      msgObj,
-      initialDeviceList.value[msgObj.id - 1],
-    )
-  },
-)
+})
 
 const sendCommand = cmd => {
-  const espTwoCommands = {
-    STOP_SPIN: true,
-    START_SPIN: true,
-    LIGHT_OFF: true,
-    LIGHT_ON: true,
-  }
-  if (espTwoCommands[cmd]) return ws.send(cmd)
-
-  hiveWS.send(
-    {
-      type: 'channel',
-      service: 'demo/app/1',
-      targetService: 'demo/app/1',
-    },
-    {
-      command: cmd,
-    },
-  )
+  hiveWS.sendData({
+    command: cmd,
+  })
 }
 
 const resetAll = () => {
@@ -170,36 +119,36 @@ const resetAll = () => {
 
 <template>
   <div class="m-4">
-    <AppSectionHeading>
-      <template #title>Floor Management</template>
-    </AppSectionHeading>
-    <AppCard>
-      <AppButton
-        class="p-button-text mb-4"
-        label="Turn off all"
-        @click="resetAll"
-      />
-      <div class="flex">
-        <div class="flex-none align-items-center justify-content-center">
-          <FloorPlan
-            v-model:item="activeItem"
-            :room-list="roomList"
-            :data="incomingData"
-            :floor="route.params.floor"
-          />
+    <h1>Floor Management</h1>
+    <Card>
+      <template #content>
+        <Button
+          class="p-button-text mb-4"
+          label="Turn off all"
+          @click="resetAll"
+        />
+        <div class="flex">
+          <div class="flex-none align-items-center justify-content-center">
+            <FloorPlan
+              v-model:item="activeItem"
+              :room-list="roomList"
+              :data="incomingData"
+              :floor="route.params.floor"
+            />
+          </div>
+          <div class="flex-grow-1 flex ml-4 surface-ground">
+            <ObjectDataDisplay
+              v-if="!isEmpty(activeItem)"
+              :data="activeItemData"
+              @command="sendCommand"
+            />
+          </div>
         </div>
-        <div class="flex-grow-1 flex ml-4 surface-ground">
-          <ObjectDataDisplay
-            v-if="!isEmpty(activeItem)"
-            :data="activeItemData"
-            @command="sendCommand"
-          />
+        <div class="p-inputgroup w-4 mt-4">
+          <InputText v-model="message" placeholder="Message" />
+          <Button label="Send message" @click="sendCommand(message)" />
         </div>
-      </div>
-      <div class="p-inputgroup w-4 mt-4">
-        <AppInputText v-model="message" placeholder="Message" />
-        <AppButton label="Send message" @click="sendMessage" />
-      </div>
-    </AppCard>
+      </template>
+    </Card>
   </div>
 </template>

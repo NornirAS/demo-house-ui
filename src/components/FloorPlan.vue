@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { fabric } from 'fabric'
-import { AppButton, AppInputDropdown, AppInputText } from '@nornir/ui'
+import Button from 'primevue/button'
+import Dropdown from 'primevue/dropdown'
+import InputText from 'primevue/inputtext'
 import {
   fetchFloorPlanList,
   fetchFloorPlanByName,
@@ -348,11 +350,11 @@ watch(
 <template>
   <div class="mb-4 flex justify-content-between">
     <div>
-      <AppButton label="New Plan" @click="newCanvas" />
-      <AppButton class="ml-4" label="Load Plan" @click="isNewCanvas = false" />
+      <Button label="New Plan" @click="newCanvas" />
+      <Button class="ml-4" label="Load Plan" @click="isNewCanvas = false" />
     </div>
     <div>
-      <AppButton
+      <Button
         :label="editMode ? 'Exit Edit Mode' : 'Enter Edit Mode'"
         class="p-button-outlined"
         @click="toggleEditMode"
@@ -360,17 +362,13 @@ watch(
     </div>
   </div>
   <div v-show="!isNewCanvas" class="mb-4">
-    <AppInputDropdown
+    <Dropdown
       v-model="canvasName"
       :options="canvasList"
       placeholder="Select Floor Plan"
     />
-    <AppButton
-      class="ml-4 p-button-outlined"
-      label="Load"
-      @click="loadCanvas"
-    />
-    <AppButton
+    <Button class="ml-4 p-button-outlined" label="Load" @click="loadCanvas" />
+    <Button
       class="ml-4"
       label="Update"
       :disabled="!isLoadedCanvas"
@@ -378,33 +376,33 @@ watch(
     />
   </div>
   <div v-show="isNewCanvas" class="mb-4 p-inputgroup">
-    <AppButton label="Add Floor Plan" @click="addImage" />
-    <AppInputText v-model="floorPlan" />
+    <Button label="Add Floor Plan" @click="addImage" />
+    <InputText v-model="floorPlan" />
   </div>
   <div class="mb-4 flex justify-content-between">
     <div>
-      <AppInputDropdown
+      <Dropdown
         v-model="selectedItem"
         :options="roomList"
         option-label="room"
         placeholder="Select Item"
         :disabled="!editMode"
       />
-      <AppButton
+      <Button
         v-show="!isSelectedObject"
         class="ml-4"
         label="Add"
         :disabled="!editMode || !isSelectedItem"
         @click="addObject"
       />
-      <AppButton
+      <Button
         v-show="isSelectedObject"
         class="ml-4"
         label="Save"
         :disabled="!editMode"
         @click="changeObject"
       />
-      <AppButton
+      <Button
         v-show="isSelectedObject"
         class="ml-4 p-button-outlined"
         label="Delete"
@@ -413,8 +411,8 @@ watch(
       />
     </div>
     <div v-show="isNewCanvas" class="p-inputgroup w-5">
-      <AppInputText v-model="canvasName" placeholder="Floor plan name" />
-      <AppButton label="Save" @click="saveCanvas" />
+      <InputText v-model="canvasName" placeholder="Floor plan name" />
+      <Button label="Save" @click="saveCanvas" />
     </div>
   </div>
 

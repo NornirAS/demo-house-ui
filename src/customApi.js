@@ -1,9 +1,9 @@
 // Custom API are features that are missing inside the Hive v1.
-import { CUSTOM_API } from '@/config'
+import { DEMO_HOUSE_BACKEND } from '@/config'
 
 const request = async ({ path, method, body }) => {
   try {
-    const res = await fetch(`${CUSTOM_API}${path}`, {
+    const res = await fetch(`${DEMO_HOUSE_BACKEND}${path}`, {
       method,
       headers: {
         'Content-Type': 'application/json',
@@ -17,29 +17,6 @@ const request = async ({ path, method, body }) => {
   } catch (error) {
     return [error]
   }
-}
-
-export const fetchReadAccessGhosts = async params => {
-  return await request({
-    path: `/read-access/${params}`,
-    method: 'GET',
-  })
-}
-
-export const addReadAccessGhost = async params => {
-  return await request({
-    path: `/read-access/add`,
-    method: 'POST',
-    body: JSON.stringify(params),
-  })
-}
-
-export const removeReadAccessGhost = async params => {
-  return await request({
-    path: `/read-access/remove`,
-    method: 'POST',
-    body: JSON.stringify(params),
-  })
 }
 
 export const fetchFloorPlanList = async params => {

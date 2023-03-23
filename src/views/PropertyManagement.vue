@@ -42,9 +42,7 @@ const buildings = [
 
 <template>
   <div class="m-4">
-    <AppSectionHeading>
-      <template #title>Property Management</template>
-    </AppSectionHeading>
+    <h1>Property Management</h1>
     <div class="flex mb-4">
       <div class="w-8 mr-4">
         <OpenStreetMap

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppButton } from '@nornir/ui'
+import Button from 'primevue/button'
 
 const props = defineProps({
   data: {
@@ -110,7 +110,7 @@ const send = () => {
       </div>
     </div>
     <div v-else>No data received...</div>
-    <AppButton
+    <Button
       v-if="data.type === 'actuator'"
       class="mt-4"
       :label="controls.label"
