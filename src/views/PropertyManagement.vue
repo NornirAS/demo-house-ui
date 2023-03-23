@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import GoogleMap from '@/components/GoogleMap.vue'
+import OpenStreetMap from '@/components/OpenStreetMap.vue'
 import BuildingPlan from '@/components/BuildingPlan.vue'
 import BuildingList from '@/components/BuildingList.vue'
 
@@ -47,7 +47,7 @@ const buildings = [
     </AppSectionHeading>
     <div class="flex mb-4">
       <div class="w-8 mr-4">
-        <GoogleMap
+        <OpenStreetMap
           v-model:selectedBuilding="selectedBuilding"
           :buildings="buildings"
         />
