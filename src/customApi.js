@@ -56,3 +56,11 @@ export const removeFloorPlan = async params => {
     body: JSON.stringify(params),
   })
 }
+
+export const login = async params => {
+  return await request({
+    path: '/auth/login',
+    method: 'POST',
+    body: JSON.stringify(params),
+  })
+}
